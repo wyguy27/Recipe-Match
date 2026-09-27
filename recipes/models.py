@@ -1,46 +1,102 @@
 from django.db import models
 
 
-class Diet(models.Model):
-    name = models.CharField(max_length=50)
+class Recipe(models.Model):
+    spoonacular_id = models.PositiveIntegerField(unique=True)
+    name = models.CharField(max_length=256)
+    image = models.URLField(blank=True)
+    ready_time = models.PositiveIntegerField(null=True)
+    servings = models.PositiveIntegerField(null=True)
+    instructions = models.TextField()
+    calories = models.DecimalField(null=True)
+    cuisines = models.ManyToManyField(
+        "Cuisine",
+        related_name="recipes",
+    )
+    diets = models.ManyToManyField(
+        "Diet",
+        related_name="recipes",
+    )
+    intolerances = models.ManyToManyField(
+        "Intolerance",
+        related_name="recipes",
+    )
+    equipment = models.ManyToManyField(
+        "Equipment",
+        related_name="recipes",
+    )
+    types = models.ManyToManyField(
+        "RecipeType",
+        related_name="recipes",
+    )
+    created_date = models.DateTimeField(auto_now_add=True)
+    last_update_date = models.DateTimeField(auto_now=True)
 
-
-class Intolerances(models.Model):
-    name = models.CharField(max_length=50)
-
-
-class Equipment(models.Model):
-    spoon_id = models.IntegerField()
-    name = models.CharField(max_length=100)
-
-
-class Type(models.Model):
-    name = models.CharField(max_length=50)
+    def __str__(self) -> str:
+        return self.name
 
 
 class Ingredient(models.Model):
-    spoon_id = models.IntegerField()
-    name = models.CharField(max_length=200)
+    spoonacular_id = models.PositiveIntegerField(unique=True)
+    name = models.CharField(max_length=256)
+    image = models.URLField(blank=True)
 
-
-class Recipe(models.Model):
-    spoon_id = models.IntegerField()
-    name = models.CharField(max_length=200)
-    cuisine = models.CharField(max_length=50)
-    ingredients = models.ManyToManyField(RecipeIngredient)
-    instructions = models.CharField(max_length=4000)
-    image = models.CharField(max_length=200)
-    prep_time = models.IntegerField()
-    servings = models.IntegerField()
-    calories = models.IntegerField()
-    diet = models.ManyToManyField(Diet)
-    intolerances = models.ManyToManyField(Intolerances)
-    equipment = models.ManyToManyField(Equipment)
-    type = models.ManyToManyField(Type)
+    def __str__(self) -> str:
+        return self.name
 
 
 class RecipeIngredient(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    amount = models.DecimalField()
-    unit = models.CharField(max_length=100)
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="ingredients",
+    )
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name="recipe_ingredients",
+    )
+    amount = models.DecimalField(null=True)
+    unit = models.CharField(max_length=50, blank=True)
+    text_measurement = models.TextField(blank=True) # Example: "1 tbsp sugar"
+
+    # Required for unique recipe / ingredient pairs in DB
+    class Meta:
+        unique_together = ("recipe", "ingredient")
+
+
+class Cuisine(models.Model):
+    name = models.CharField(max_length = 50, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Diet(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Intolerance(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Equipment(models.Model):
+    spoonacular_id = models.PositiveIntegerField(null=True, unique=True)
+    name = models.CharField(max_length=100)
+    image = models.URLField(blank=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class RecipeType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self) -> str:
+        return self.name

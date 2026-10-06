@@ -12,22 +12,32 @@ class Recipe(models.Model):
     cuisines = models.ManyToManyField(
         "Cuisine",
         related_name="recipes",
+        blank=True,
+        null=True,
     )
     diets = models.ManyToManyField(
         "Diet",
         related_name="recipes",
+        blank=True,
+        null=True,
     )
     intolerances = models.ManyToManyField(
         "Intolerance",
         related_name="recipes",
+        blank=True,
+        null=True,
     )
     equipment = models.ManyToManyField(
         "Equipment",
         related_name="recipes",
+        blank=True,
+        null=True,
     )
     types = models.ManyToManyField(
         "RecipeType",
         related_name="recipes",
+        blank=True,
+        null=True,
     )
     created_date = models.DateTimeField(auto_now_add=True)
     last_update_date = models.DateTimeField(auto_now=True)

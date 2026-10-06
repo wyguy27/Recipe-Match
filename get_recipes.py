@@ -5,26 +5,25 @@ Ensure you have a ".env" file with an API_KEY variable in your project's root di
 
 import os, json, requests
 from dotenv import load_dotenv
-from django.core.management.base import BaseCommand
-from recipes.models import (
-    Recipe, Ingredient, RecipeIngredient, Cuisine,
-    Diet, Intolerance, Equipment, RecipeType
-)
 
-BASE_API_URL = r"https://api.spoonacular.com"
+
+TEST_API_URL = r"https://api.spoonacular.com/recipes/complexSearch"
 load_dotenv(".env") # Loads .env vars
 API_KEY = os.getenv("API_KEY")
+PARAMS = {
+    "apiKey": API_KEY,
+    "addRecipeInformation": "true",
+    "addRecipeInstructions": "true",
+    "instructionsRequired": "true",
+    "number": "1",
+}
 
 
-def call(query: str) -> None:
-    """Queries Spoonacular API for recipe information"""
-    pass
-
-
-
-def main() -> None:
-    query: str = f""
+def call() -> requests.Response:
+    """(This is bad, clean this up) Queries Spoonacular API for recipe information"""
+    return requests.get(TEST_API_URL, params=PARAMS)
 
 
 if __name__ == "__main__":
-    main()
+    res = call()
+    print(f"{res.status_code=}\n{res.text=}")

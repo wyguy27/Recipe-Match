@@ -19,22 +19,17 @@ PARAMS = {
 }
 
 
-def call() -> requests.Response:
+def call() -> dict:
     """(TODO: Allow customizable queries) Queries Spoonacular API for recipe information"""
-    return requests.get(TEST_API_URL, params=PARAMS)
+    res: requests.Response = requests.get(TEST_API_URL, params=PARAMS)
+    return res.json()
 
 
-def parse_recipe():
-    """Parses desired recipe information to be saved to the local database"""
+def parse_response(res: dict) -> dict[str, str | list]:
+    """Parses a recipe response and saves as a JSON fixture"""
     
-    pass
-
-
-def parse_ingredient():
-    """Parses desired ingredient information to be saved to the local database"""
-    pass
 
 
 if __name__ == "__main__":
-    res = call()
-    print(f"{res.status_code=}\n{res.text=}")
+    res: dict = call()
+    

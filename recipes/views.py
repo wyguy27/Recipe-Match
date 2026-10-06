@@ -12,3 +12,11 @@ def recipe(request):
 def search(request):
     template = loader.get_template("recipes/search.html")
     return HttpResponse(template.render({}, request))
+
+def example(request):
+    template = loader.get_template("base.html")
+    return HttpResponse(template.render({}, request))
+
+def temp(request):
+    template = loader.get_template("recipes/test.html")
+    return HttpResponse(template.render({}, request))

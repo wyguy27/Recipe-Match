@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% extends "base.html" %}
+
+    {% block title %}My amazing blog{% endblock %}
+
+    {% block header %}I Hello World{% endblock %}
+
+    {% block header2 %}Frfr 🔥{% endblock %}
+
+    {% block content %}
+    {% for entry in blog_entries %}
+        <h2>{{ entry.title }}</h2>
+        <p>{{ entry.body }}</p>
+    {% endfor %}
+    {% endblock %}
+
+    <body>
+        <form>
+            <input type="text" id="searchbar" name="search" placeholder="What would you like to search for...">
+            <input type="submit" id="enter_search" name="enter_search" value="Enter">
+        </form>
+    </body>
+</html>

@@ -18,23 +18,27 @@ PARAMS = {
     "number": "1",
 }
 
-
+# This method calls for a recipes entire stored information from Spoonacular
+# Inputs: TEST_API_URL: The stored value for the base URl
+#         params: The stored additions to the URL(Set to the PARAM container)
+# Outputs: A recipes entire raw information to be parsed within parse_recipe
+# Author: Derrick
 def call() -> requests.Response:
     """(TODO: Allow customizable queries) Queries Spoonacular API for recipe information"""
     return requests.get(TEST_API_URL, params=PARAMS)
 
-
+#This method parses the raw information and stores it into a separate file in JSON format
 def parse_recipe():
-    """Parses desired recipe information to be saved to the local database"""
-    
+    api_data = requests.get(TEST_API_URL, params=PARAMS)
+    with open("Recipes.JSON", "w", encoding= "utf-8") as write_file:
+        json.dump(api_data.json(),write_file)
     pass
 
-
+#This method will help to break down the recipe further to understand the categories the ingredients fall into
 def parse_ingredient():
     """Parses desired ingredient information to be saved to the local database"""
     pass
 
 
 if __name__ == "__main__":
-    res = call()
-    print(f"{res.status_code=}\n{res.text=}")
+    res = parse_recipe()

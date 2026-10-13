@@ -1,38 +1,65 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background: #fafaf5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9f5;
   color: #222;
 }
 
-header, footer {
-  background: #2d6a4f;
-  color: white;
+.navbar {
+  background: #0094fd;
   padding: 1rem 2rem;
 }
 
-header h1 { margin: 0; }
-
-nav a {
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  justify-content: space-between; /* Pushes logo and links to opposite ends */
-  align-items: center;            /* Vertically centers the text content */
-  background-color: #333;         /* Dark background */
-  padding: 15px 30px;             /* Padding around the nav elements */
+  gap: 1.5rem;
 }
 
-nav a:hover { text-decoration: underline; }
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
 
-main {
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+#content {
+  flex: 1;
   max-width: 1000px;
+  width: 100%;
   margin: 2rem auto;
   padding: 0 1rem;
+  box-sizing: border-box;
 }
 
-/* Shared recipe card, used on homepage and search results */
+footer {
+  background: #0062a8;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+footer p {
+  margin: 0;
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
 .recipe-card {
   background: white;
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }

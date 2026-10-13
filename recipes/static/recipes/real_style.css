@@ -1,0 +1,46 @@
+body {
+  font-family: Arial, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  background: #fafaf5;
+  color: #222;
+}
+
+header{
+  background: #0094fd;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+  background: #0062a8;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+header h1 { margin: 0; }
+
+nav a {
+  justify-content: space-between; /* Pushes logo and links to opposite ends */
+  align-items: center;            /* Vertically centers the text content */
+  background-color: #333;         /* Dark background */
+  padding: 15px 30px;             /* Padding around the nav elements */
+}
+
+nav a:hover { text-decoration: underline; }
+
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Shared recipe card, used on homepage and search results */
+.recipe-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}

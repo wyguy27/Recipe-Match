@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, "recipes/index.html")
+    return render(request, "recipes/homepage.html")
 
 def recipe(request, recipe_id):
     response = "You are looking at %s."
@@ -12,8 +12,5 @@ def recipe(request, recipe_id):
 def search(request):
     return HttpResponse("You are at the search page.")
 
-def base(request):
-    return render(request, "recipes/base.html")
-
-def inherit(request):
-    return render(request, "recipes/inherit.html")
+def about(request):
+    return HttpResponse("You are at the about page.")

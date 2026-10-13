@@ -8,7 +8,6 @@ class Recipe(models.Model):
     ready_time = models.PositiveIntegerField(null=True)
     servings = models.PositiveIntegerField(null=True)
     instructions = models.TextField()
-    calories = models.DecimalField(null=True)
     cuisines = models.ManyToManyField(
         "Cuisine",
         related_name="recipes",
@@ -34,8 +33,6 @@ class Recipe(models.Model):
         related_name="recipes",
         blank=True,
     )
-    created_date = models.DateTimeField(auto_now_add=True)
-    last_update_date = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.name

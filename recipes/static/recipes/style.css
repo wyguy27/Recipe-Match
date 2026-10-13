@@ -14,9 +14,11 @@ header, footer {
 header h1 { margin: 0; }
 
 nav a {
-  color: white;
-  margin-right: 1rem;
-  text-decoration: none;
+  display: flex;
+  justify-content: space-between; /* Pushes logo and links to opposite ends */
+  align-items: center;            /* Vertically centers the text content */
+  background-color: #333;         /* Dark background */
+  padding: 15px 30px;             /* Padding around the nav elements */
 }
 
 nav a:hover { text-decoration: underline; }

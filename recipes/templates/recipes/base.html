@@ -7,19 +7,20 @@
 </head>
 
 <body>
-    <div id="sidebar">
-        {% block sidebar %}
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/search/">Search</a></li>
-            <li><a href="/about/">About Us</a></li>
+    <nav class="navbar">
+        {% block navbar %}
+        <ul class="nav-links">
+            <li><a href=#home>Home</a></li>
+            <li><a href="#search">Search</a></li>
+            <li><a href="#about">About Us</a></li>
         </ul>
         {% endblock %}
-    </div>
+    </nav>
 
     <div id="content">
         {% block content %}{% endblock %}
     </div>
+
     <footer>
     <p>Made by the CCC recipe app team</p>
   </footer>

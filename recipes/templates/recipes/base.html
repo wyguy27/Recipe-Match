@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
+    <title>{% block title %}Recipe Finder{% endblock %}</title>
+</head>
+
+<body>
+    <div id="sidebar">
+        {% block sidebar %}
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/search/">Search</a></li>
+            <li><a href="/about/">About Us</a></li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+    <p>Made by the CCC recipe app team</p>
+  </footer>
+</body>
+</html>

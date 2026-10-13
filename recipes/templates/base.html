@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
 
-    <title>My page title</title>
+    <title>{% block title %}My amazing site{% endblock %}</title>
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Sonsie+One"
       rel="stylesheet" />
@@ -15,7 +15,7 @@
     <!-- The main header used across all the pages of our website -->
 
     <header>
-      <h1>Header</h1>
+      <h1>{% block header %}My amazing site{% endblock %}</h1>
     </header>
 
     <nav>
@@ -39,7 +39,7 @@
     <main>
       <!-- An article -->
       <article>
-        <h2>Article heading</h2>
+        <h2>{% block header2 %}My amazing blog{% endblock %}</h2>
 
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Donec a diam

@@ -6,3 +6,6 @@ def hash_password(pw_text):
     salt = bcrypt.gensalt(rounds = 12)
     pw_hashed = bcrypt.hashpw(pw_bytes, salt)
     return pw_hashed
+
+def verify_password(pw_text, pw_hashed):
+    return bcrypt.checkpw(pw_text.encode('utf-8'), pw_hashed)

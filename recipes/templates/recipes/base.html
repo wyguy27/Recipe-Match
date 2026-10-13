@@ -4,6 +4,12 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
     <title>{% block title %}Recipe Finder{% endblock %}</title>
+    <header class="site-header">
+        {% block header %}
+        <h1>Welcome to Recipe-Match!</h1>
+        <p>Find something delicious to cook</p>
+        {% endblock %}
+    </header>
 </head>
 
 <body>

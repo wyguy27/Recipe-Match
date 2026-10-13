@@ -1,21 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% extends "base.html" %}
+{% extends "recipes/base.html" %}
 
+{% block title %}My amazing blog{% endblock %}
 
-    {% block title %}My amazing blog{% endblock %}
-
-
-    {% block header %}I Hello World{% endblock %}
-
-
-    {% block header2 %}Frfr 🔥{% endblock %}
-
-
-    {% block content %}
-    {% for entry in blog_entries %}
-        <h2>{{ entry.title }}</h2>
-        <p>{{ entry.body }}</p>
-    {% endfor %}
-    {% endblock %}
-</html>
+{% block content %}
+{% for entry in blog_entries %}
+    <h2>{{ entry.title }}</h2>
+    <p>{{ entry.body }}</p>
+{% endfor %}
+{% endblock %}

@@ -13,7 +13,7 @@ def search(request):
     return HttpResponse("You are at the search page.")
 
 def base(request):
-    return render(request, "base.html")
+    return render(request, "recipes/base.html")
 
 def inherit(request):
     return render(request, "recipes/inherit.html")

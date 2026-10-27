@@ -107,7 +107,7 @@ def populate_equipment():
     parse_equipment()
 
 def populate_ingred_amount():
-    API_URL = r"https://api.spoonacular.com/recipes/1003464/equipmentWidget.json"
+    API_URL = r"https://api.spoonacular.com/recipes/1003464/ingredientWidget.json"
 
     parse_ingredients()
 

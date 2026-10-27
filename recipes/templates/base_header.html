@@ -15,14 +15,14 @@
         <!-- The main header used across all the pages of our website -->
 
         <header>
-            <h1>{% block header %}Welcome to Recipe Match{% endblock %}</h1>
+            <h1>{% block header %}Recipe Match{% endblock %}</h1>
         </header>
 
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Search</a></li>
-                <li><a href="#">Recipes</a></li>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'search' %}">Search</a></li>
+                <li><a href="{% url 'recipe' recipe_id=0 %}">Recipes</a></li>
                 <li><a href="#">About Us</a></li>
             </ul>
         </nav>

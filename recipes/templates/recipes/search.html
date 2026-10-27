@@ -1,36 +1,76 @@
-<div id="header">
+{% extends "base_header.html" %}
+
+{% block title %}Search Recipes{% endblock %}
+
+{% block content %}
+    <div id="header">
     <h1>KYS!!!! (Know Your SSN)</h1>
     <h4>(and give it to me)</h4>
 
-</div>
+    </div>
 
-<div id="search_bar">
-    <form>
-        <input type="text" id="searchbar" name="search" placeholder="What would you like to search for...">
-        <input type="submit" id="enter_search" name="enter_search" value="Enter">
-    </form>
+    <div class="search_container">
+        <form>
+            <input type="text" id="searchbar" name="search" placeholder="What would you like to search for...">
+            <input type="submit" id="enter_search" name="enter_search" value="Enter">
+        </form>
 
-    <form>
-        <input type="checkbox" id="gluten_free" name="diet" value="HTML">
-        </label for="gluten_free">Gluten Free</label><br>
-        <input type="checkbox" id="keto" name="diet" value="HTML">
-        </label for="keto">Ketogenic</label><br>
-        <input type="checkbox" id="vegetarian" name="diet" value="HTML">
-        </label for="vegetarian">Vegetarian</label><br>
-        <input type="checkbox" id="vegan" name="diet" value="HTML">
-        </label for="vegan">Vegan</label><br>
-        <input type="checkbox" id="pescetarian" name="diet" value="HTML">
-        </label for="pescetarian">Pescetarian</label><br>
-    </form>
-</div>
+        <details>
+            <summary>Advanced Search</summary>
+            <form>
+                <div class="diet">
+                    <summary id="drs">Dietary Restrictions</summary>
+                    <input type="checkbox" id="gluten_free" name="gluten" value="HTML">
+                    </label for="gluten_free">Gluten Free</label><br>
+                    <input type="checkbox" id="keto" name="keto" value="HTML">
+                    </label for="keto">Ketogenic</label><br>
+                    <input type="checkbox" id="vegetarian" name="clavicular" value="HTML">
+                    </label for="vegetarian">Vegetarian</label><br>
+                    <input type="checkbox" id="vegan" name="vegan" value="HTML">
+                    </label for="vegan">Vegan</label><br>
+                    <input type="checkbox" id="pescetarian" name="aquaman" value="HTML">
+                    </label for="pescetarian">Pescetarian</label><br>
+                </div>
+            </form>
+        </details>
+    </div>
 
-<style>
-    #header {
-        width: 100%;
-        font-family: Papyrus;
-    }
+    {% include "base_footer.html" %}
 
-    #search_bar {
-        width: 100%;
-    }
-</style>
+    <p>
+        I'm a chuddy girl~ 🎵 </br>
+        In a chuddy wo-orld~ 🎵 </br>
+        On reddit gooning, TungTung Sahuring 🎵 </br>
+        🗣️🔥
+    </p>
+
+    <style>
+        #header {
+            width: 100%;
+            font-family: Papyrus;
+        }
+
+        .search_container {
+            width: 80%;
+        }
+
+        #searchbar {
+            width: 90%;
+        }
+
+        details {
+            border: 1px solid #aaaaaa;;
+            border-radius: 4px;
+            margin-top: 5px;
+            margin-right: 10%;
+        }
+
+        .diet {
+            border: 1px solid #aaaaaa
+        }
+
+        #drs {
+            margin-left: 10px;
+        }
+    </style>
+{% endblock %}

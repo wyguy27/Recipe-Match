@@ -3,20 +3,14 @@ from django.shortcuts import render
 from django.template import loader
 
 def index(request):
-    template = loader.get_template("recipes/index.html")
-    return HttpResponse(template.render({}, request))
+    return render(request, "recipes/homepage.html")
 
-def recipe(request):
-    return HttpResponse("Hello, wgvhjkuikgjcfguhkyjchfgjjvc")
+def recipe(request, recipe_id):
+    response = "You are looking at %s."
+    return HttpResponse(response % recipe_id)
 
 def search(request):
-    template = loader.get_template("recipes/search.html")
-    return HttpResponse(template.render({}, request))
+    return HttpResponse("You are at the search page.")
 
-def example(request):
-    template = loader.get_template("base.html")
-    return HttpResponse(template.render({}, request))
-
-def temp(request):
-    template = loader.get_template("recipes/test.html")
-    return HttpResponse(template.render({}, request))
+def about(request):
+    return HttpResponse("You are at the about page.")

@@ -2,13 +2,19 @@
 
 import os, sys, django
 
-# Sorry for the jank
+# Jank
 DJANGO_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), r"recipes")
 sys.path.insert(0, DJANGO_DIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 from recipes.models import Diet
+
+"""
+Completed Payloads:
+- Diet
+
+"""
 
 if __name__ == "__main__":
     payload = [

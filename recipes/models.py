@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Recipe(models.Model):
-    spoonacular_id = models.PositiveIntegerField(unique=True)
+    spoonacular_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=256)
     image = models.URLField(blank=True)
     ready_time = models.PositiveIntegerField(null=True)
@@ -39,9 +39,8 @@ class Recipe(models.Model):
 
 
 class Ingredient(models.Model):
-    spoonacular_id = models.PositiveIntegerField(unique=True)
+    spoonacular_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=256)
-    image = models.URLField(blank=True)
 
     def __str__(self) -> str:
         return self.name
@@ -89,7 +88,7 @@ class Intolerance(models.Model):
 
 
 class Equipment(models.Model):
-    spoonacular_id = models.PositiveIntegerField(null=True, unique=True)
+    spoonacular_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=100)
     image = models.URLField(blank=True)
 

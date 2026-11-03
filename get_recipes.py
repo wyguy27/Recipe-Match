@@ -35,7 +35,7 @@ def call(api_url:str=API_URL, params:dict=BASE_PARAMS) -> requests.Response:
 
 
 # This method parses the raw information and stores it into a separate file in JSON format.
-# Author: Julian
+# Author: Derrick
 def parse_call(api_data: requests.Response) -> dict:
     """
     Parses response JSON to extract useful information
@@ -68,6 +68,23 @@ def parse_call(api_data: requests.Response) -> dict:
 
     return parsed
 
+def parse_equipment(api_data: requests.Response) -> dict:
+    """
+    Parses response JSON to extract useful information
+    about equipment
+    """
+    data: dict = api_data.json()
+    results: dict = data.get("results", {})[0] # TODO: CHECK IF THIS IS CONSISTENT, for some reason they store "results" as a dict in a list
+    parsed: dict = {}
+
+def parse_ingredients(api_data: requests.Response) -> dict:
+    """
+    Parses response JSON to extract useful information
+    about ingredient amount
+    """
+    data: dict = api_data.json()
+    results: dict = data.get("results", {})[0] # TODO: CHECK IF THIS IS CONSISTENT, for some reason they store "results" as a dict in a list
+    parsed: dict = {}
 
 def parse_ingredients(instructions: list) -> dict:
     """Finds all ingredients from the instructions list and consolidates all into a list"""
@@ -145,6 +162,17 @@ def populate_recipe(number:str='1', offset:str='0') -> None:
     store_call(api_data) # Stores original response to "recipe.json"
     parse_call(api_data)
 
+def populate_equipment():
+    API_URL = r"https://api.spoonacular.com/recipes/1003464/equipmentWidget.json"
+
+    parse_equipment()
+
+def populate_ingred_amount():
+    API_URL = r"https://api.spoonacular.com/recipes/1003464/ingredientWidget.json"
+
+    parse_ingredients()
+
 
 if __name__ == "__main__":
     populate_recipe()
+    populate_equipment()

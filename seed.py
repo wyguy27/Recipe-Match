@@ -100,6 +100,7 @@ def parse_call(api_data: requests.Response):
                 "ready_time": recipe_data.get("readyInMinutes"),
                 "servings": recipe_data.get("servings"),
                 "instructions": instructions_formatted,
+                "source_url": recipe_data.get("spoonacularSourceUrl", "https://spoonacular.com/"),
             }
         )
 
@@ -114,7 +115,13 @@ def parse_call(api_data: requests.Response):
         recipe.types.set(recipe_types)
         #recipe.intolerances.set(intolerances)
         recipe.equipment.set(equipment_instances)
-        # ADD RECIPE INGREDIENTS
+
+        # Adds all RecipeIngredients associated with this recipe
+        for ing in ingredient_instances:
+            RecipeIngredient.objects.update_or_create(
+                recipe=recipe,
+                ingredient=ing,
+            )
 
 
 """

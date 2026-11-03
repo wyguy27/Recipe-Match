@@ -8,6 +8,7 @@ class Recipe(models.Model):
     ready_time = models.PositiveIntegerField(null=True)
     servings = models.PositiveIntegerField(null=True)
     instructions = models.TextField()
+    source_url = models.TextField()
     cuisines = models.ManyToManyField(
         "Cuisine",
         related_name="recipes",
@@ -57,9 +58,6 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         related_name="recipe_ingredients",
     )
-    amount = models.DecimalField(null=True)
-    unit = models.CharField(max_length=50, blank=True)
-    text_measurement = models.TextField(blank=True) # Example: "1 tbsp sugar"
 
     # Required for unique recipe / ingredient pairs in DB
     class Meta:

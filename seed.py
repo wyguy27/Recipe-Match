@@ -1,11 +1,17 @@
 """
-Fills the local SQLite database with information from 700 recipes (daily limit).
+Populates DB with recipe, ingredient, and related information.
 Ensure you have a ".env" file with an API_KEY variable in your project's root directory.
 """
 
-import os, json, requests
-#from recipes.models import Recipe, Ingredient, RecipeIngredient
+import os, sys, json, requests, django
 from dotenv import load_dotenv
+
+DJANGO_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), r"recipes")
+sys.path.insert(0, DJANGO_DIR)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+django.setup()
+
+from recipes.models import Recipe, Ingredient, RecipeIngredient, Cuisine, Diet, Equipment, RecipeType, Intolerance
 
 load_dotenv(".env")
 
@@ -34,13 +40,91 @@ def call(api_url:str=API_URL, params:dict=BASE_PARAMS) -> requests.Response:
     return api_data
 
 
+def parse_call(api_data: requests.Response):
+    """
+    Parses response JSON to extract useful information
+    about recipes, ingredients, and related info.
+    This is then stored into Django's SQLite3 DB.
+    """
+    data: dict = api_data.json()
+
+    for recipe_data in data.get("results", []):
+        instructions = []
+        seen_equipment = set()
+        equipment_instances = []
+        seen_ingredients = set()
+        ingredient_instances = []
+        analyzed_instructions = recipe_data.get("analyzedInstructions", [])
+
+        for instruction in analyzed_instructions:
+            steps = instruction.get("steps", []).strip()
+
+            for step in steps:
+                num = step.get("number", "")
+                text = step.get("step", "").strip()
+                if text:
+                    instructions.append(f"Step {num}: {text}")
+
+                for equipment in step.get("equipment", []):
+                    equipment_id = equipment.get("id")
+                    if equipment_id and equipment_id not in seen_equipment:
+                        seen_equipment.add(equipment_id)
+                        eq, _ = Equipment.objects.update_or_create(
+                            spoonacular_id=equipment_id,
+                            defaults={
+                                "name": equipment.get("name", "Unknown"),
+                                "image": equipment.get("image", ""),
+                            }
+                        )
+                        equipment_instances.append(eq)
+
+                for ingredient in step.get("ingredients", []):
+                    ingredient_id = ingredient.get("id")
+
+                    if ingredient_id and ingredient_id not in seen_ingredients:
+                        seen_ingredients.add(ingredient_id)
+                        ing, _ = Ingredient.objects.update_or_create(
+                            spoonacular_id=ingredient_id,
+                            defaults={
+                                "name": ingredient.get("name") or ingredient.get("localizedName", ""),
+                            }
+                        )
+                        ingredient_instances.append(ing)
+
+        instructions_formatted = "\n\n".join(instructions) if instructions else ""
+        recipe, _ = Recipe.objects.update_or_create(
+            spoonacular_id = recipe_data.get("id"),
+            defaults={
+                "name": recipe_data.get("title", "Unknown Recipe"),
+                "image": recipe_data.get("image", ""),
+                "ready_time": recipe_data.get("readyInMinutes"),
+                "servings": recipe_data.get("servings"),
+                "instructions": instructions_formatted,
+            }
+        )
+
+        diets = [Diet.objects.update_or_create(name=diet)[0] for diet in recipe_data.get("diets", [])]
+        cuisines = [Cuisine.objects.update_or_create(name=cuisine)[0] for cuisine in recipe_data.get("cuisines", [])]
+        recipe_types = [RecipeType.objects.update_or_create(name=recipe_type) for recipe_type in recipe_data.get("dishTypes", [])]
+        #intolerances = [Intolerance.objects.update_or_create(name=intolerance) for intolerance in recipe_data.get("intolerances", [])]
+
+        # Adds many-to-many relationships to Recipe
+        recipe.diets.set(diets)
+        recipe.cuisines.set(cuisines)
+        recipe.types.set(recipe_types)
+        #recipe.intolerances.set(intolerances)
+        recipe.equipment.set(equipment_instances)
+        # ADD RECIPE INGREDIENTS
+
+
+"""
 # This method parses the raw information and stores it into a separate file in JSON format.
 # Author: Derrick
 def parse_call(api_data: requests.Response) -> dict:
-    """
+    """"""
     Parses response JSON to extract useful information
     about recipes and ingredients.
-    """
+    """"""
     data: dict = api_data.json()
     results: dict = data.get("results", [{}])[0]
     instructions: list = results.get("analyzedInstructions", [{}])[0].get("steps", [])
@@ -68,39 +152,6 @@ def parse_call(api_data: requests.Response) -> dict:
 
     return parsed
 
-def parse_equipment(api_data: requests.Response) -> dict:
-    """
-    Parses response JSON to extract useful information
-    about equipment
-    """
-    data: dict = api_data.json()
-    results: dict = data.get("results", {})[0] # TODO: CHECK IF THIS IS CONSISTENT, for some reason they store "results" as a dict in a list
-    parsed: dict = {}
-
-def parse_ingredients(api_data: requests.Response) -> dict:
-    """
-    Parses response JSON to extract useful information
-    about ingredient amount
-    """
-    data: dict = api_data.json()
-    results: dict = data.get("results", {})[0] # TODO: CHECK IF THIS IS CONSISTENT, for some reason they store "results" as a dict in a list
-    parsed: dict = {}
-
-def parse_ingredients(instructions: list) -> dict:
-    """Finds all ingredients from the instructions list and consolidates all into a list"""
-    raise NotImplementedError  
-
-
-"""def parse_instructions(instructions: list) -> str:
-    """"""Consolidates all instructions into a single string of steps.""""""
-    all_instructions: str = ""
-    for instruction in instructions:
-        number: int = instruction.get("number", 0)
-        step: str = instruction.get("step", "")
-        all_instructions += f"Step {number}:\n{step}\n\n"
-
-    return all_instructions"""
-
 
 def parse_instructions(instructions: list) -> dict:
     """"""
@@ -117,27 +168,7 @@ def parse_instructions(instructions: list) -> dict:
         parsed["ingredients"].append(ingredient for ingredient in step_ingredients)
 
     return parsed
-
-
-def parse_equipment(instructions: list) -> dict:
-    """Finds all equipment from the instructions list and consolidates all into a list"""
-    raise NotImplementedError
-
-
-def db_store_recipe() -> None:
-    raise NotImplementedError
-
-
-def db_store_ingredients() -> None:
-    raise NotImplementedError
-
-
-def db_store_recipe_ingredients() -> None:
-    raise NotImplementedError
-
-
-def db_store_equipment() -> None:
-    raise NotImplementedError
+"""
 
 
 # Author: Julian
@@ -165,12 +196,8 @@ def populate_recipe(number:str='1', offset:str='0') -> None:
 def populate_equipment():
     API_URL = r"https://api.spoonacular.com/recipes/1003464/equipmentWidget.json"
 
-    parse_equipment()
-
 def populate_ingred_amount():
     API_URL = r"https://api.spoonacular.com/recipes/1003464/ingredientWidget.json"
-
-    parse_ingredients()
 
 
 if __name__ == "__main__":

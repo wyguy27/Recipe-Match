@@ -1,8 +1,5 @@
-"""Tests how we can add tuples to our DB"""
-
 import os, sys, django
 
-# Jank
 DJANGO_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), r"recipes")
 sys.path.insert(0, DJANGO_DIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")

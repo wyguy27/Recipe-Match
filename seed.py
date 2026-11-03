@@ -124,60 +124,6 @@ def parse_call(api_data: requests.Response):
             )
 
 
-"""
-# This method parses the raw information and stores it into a separate file in JSON format.
-# Author: Derrick
-def parse_call(api_data: requests.Response) -> dict:
-    """"""
-    Parses response JSON to extract useful information
-    about recipes and ingredients.
-    """"""
-    data: dict = api_data.json()
-    results: dict = data.get("results", [{}])[0]
-    instructions: list = results.get("analyzedInstructions", [{}])[0].get("steps", [])
-    parsed: dict = {}
-    store_call(instructions, "instructions")
-
-    # Fetches all needed data. Figures out the necessary formats and mappings to models.
-    spoonacular_id: str | None = results.get("id", None)
-    if spoonacular_id is None:
-        return {}
-    parsed["spoonacular_id"] = spoonacular_id
-    parsed["image"] = results.get("image", DEFAULT_IMAGE_URL)
-    parsed["name"] = results.get("title", "Recipe")
-    parsed["ready_time"] = results.get("readyInMinutes", "Unknown")
-    parsed["servings"] = results.get("servings", "Unknown")
-    parsed["cuisines"] = results.get("cuisines", [])
-    parsed["types"] = results.get("dishTypes", [])
-    parsed["diets"] = results.get("diets", [])
-    parsed["intolerances"] = results.get("intolerances", [])
-    parsed["equipment"] = parse_equipment(instructions)
-    parsed["instructions"] = parse_instructions(instructions)
-
-    for key, val in parsed.items():
-        print(f"{key}: {val}")
-
-    return parsed
-
-
-def parse_instructions(instructions: list) -> dict:
-    """"""
-    parsed: dict = {}
-    parsed["instructions"] = ""
-    parsed["ingredients"] = []
-    parsed["equipment"] = []
-    for instruction in instructions:
-        number: int = instruction.get("number", 0)
-        step_instruction: str = instruction.get("step", "")
-        step_ingredients: dict = instruction.get("ingredients", [])
-        step_equipment: dict = instruction.get("equipment", [])
-        parsed["instructions"] += f"Step {number}:\n{step_instruction}\n\n"
-        parsed["ingredients"].append(ingredient for ingredient in step_ingredients)
-
-    return parsed
-"""
-
-
 # Author: Julian
 def store_call(api_data: requests.Response | dict | list, filename:str="recipe") -> None:
     """Stores an API response to a local JSON file"""
@@ -209,4 +155,3 @@ def populate_ingred_amount():
 
 if __name__ == "__main__":
     populate_recipe()
-    populate_equipment()

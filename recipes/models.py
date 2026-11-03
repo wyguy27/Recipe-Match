@@ -9,6 +9,7 @@ class Recipe(models.Model):
     servings = models.PositiveIntegerField(null=True)
     instructions = models.TextField()
     source_url = models.TextField()
+    visited_count = models.IntegerField()
     cuisines = models.ManyToManyField(
         "Cuisine",
         related_name="recipes",

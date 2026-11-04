@@ -138,15 +138,14 @@ def store_call(api_data: requests.Response | dict | list, filename:str="recipe")
             file.write("Error saving data. Check the data format.")
 
 
-def populate_recipe(number:str='100', offset:str='500') -> None:
+def populate_recipe(number: str = '1', offset: str = '0') -> None:
     """Stores recipe information into Django's SQLite DB"""
     params = BASE_PARAMS
     params["number"] = number
     params["offset"] = offset
     api_data: requests.Response = call(params=params)
-    store_call(api_data) # Stores original response to "recipe.json"
     parse_call(api_data)
 
 
 if __name__ == "__main__":
-    populate_recipe()
+    populate_recipe("100", "600")

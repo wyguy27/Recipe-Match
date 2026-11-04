@@ -57,7 +57,7 @@ def parse_call(api_data: requests.Response):
         analyzed_instructions = recipe_data.get("analyzedInstructions", [])
 
         for instruction in analyzed_instructions:
-            steps = instruction.get("steps", []).strip()
+            steps = instruction.get("steps", [])
 
             for step in steps:
                 num = step.get("number", "")
@@ -101,12 +101,13 @@ def parse_call(api_data: requests.Response):
                 "servings": recipe_data.get("servings"),
                 "instructions": instructions_formatted,
                 "source_url": recipe_data.get("spoonacularSourceUrl", "https://spoonacular.com/"),
+                "visited_count": 0,
             }
         )
 
         diets = [Diet.objects.update_or_create(name=diet)[0] for diet in recipe_data.get("diets", [])]
         cuisines = [Cuisine.objects.update_or_create(name=cuisine)[0] for cuisine in recipe_data.get("cuisines", [])]
-        recipe_types = [RecipeType.objects.update_or_create(name=recipe_type) for recipe_type in recipe_data.get("dishTypes", [])]
+        recipe_types = [RecipeType.objects.update_or_create(name=recipe_type)[0] for recipe_type in recipe_data.get("dishTypes", [])]
         #intolerances = [Intolerance.objects.update_or_create(name=intolerance) for intolerance in recipe_data.get("intolerances", [])]
 
         # Adds many-to-many relationships to Recipe
@@ -137,7 +138,7 @@ def store_call(api_data: requests.Response | dict | list, filename:str="recipe")
             file.write("Error saving data. Check the data format.")
 
 
-def populate_recipe(number:str='1', offset:str='0') -> None:
+def populate_recipe(number:str='100', offset:str='500') -> None:
     """Stores recipe information into Django's SQLite DB"""
     params = BASE_PARAMS
     params["number"] = number
@@ -145,12 +146,6 @@ def populate_recipe(number:str='1', offset:str='0') -> None:
     api_data: requests.Response = call(params=params)
     store_call(api_data) # Stores original response to "recipe.json"
     parse_call(api_data)
-
-def populate_equipment():
-    API_URL = r"https://api.spoonacular.com/recipes/1003464/equipmentWidget.json"
-
-def populate_ingred_amount():
-    API_URL = r"https://api.spoonacular.com/recipes/1003464/ingredientWidget.json"
 
 
 if __name__ == "__main__":

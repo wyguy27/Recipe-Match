@@ -1,0 +1,8 @@
+<div class="recipe-grid">
+    {% for r in recipes %}
+        <div class="recipe-card">
+            <img src="{{r.image}}" alt="{{r.name}}">
+            <p>{{r.name}}</p>
+        </div>
+    {% endfor %}
+</div>

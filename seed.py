@@ -148,4 +148,4 @@ def populate_recipe(number: str = '1', offset: str = '0') -> None:
 
 
 if __name__ == "__main__":
-    populate_recipe("100", "600")
+    populate_recipe()

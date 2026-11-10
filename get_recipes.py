@@ -18,12 +18,9 @@ PARAMS = {
     "number": "1",
 }
 
-
-def call() -> requests.Response:
-    """(This is bad, clean this up) Queries Spoonacular API for recipe information"""
-    return requests.get(TEST_API_URL, params=PARAMS)
-
-
 if __name__ == "__main__":
     res = call()
     print(f"{res.status_code=}\n{res.text=}")
+
+def search_Recipes() -> requests.Response:
+    return requests.get("https://api.spoonacular.com/recipes/complexSearch", params=PARAMS)

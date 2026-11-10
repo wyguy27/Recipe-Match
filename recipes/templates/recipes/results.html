@@ -1,0 +1,31 @@
+{% extends "recipes/base.html" %}
+
+{% block title %}Search Recipes{% endblock %}
+
+{% block content %}
+
+<p>Showing results for: <strong>{{ query }}</strong></p>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+{% if results %}
+{% for recipe in results %}
+
+    <div class="recipe-card">
+        <h2>{{ recipe.title }}</h2>
+
+        <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+
+        <p>Recipe ID: {{ recipe.id }}</p>
+    </div>
+
+{% endfor %}
+
+{% else %}
+    <p>No recipes found.</p>
+{% endif %}
+
+
+{% endblock %}

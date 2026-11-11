@@ -1,10 +1,15 @@
 {% extends "recipes/base.html" %}
 
-{% block title %}My amazing blog{% endblock %}
+{% block title %}Recipe Match{% endblock %}
 
 {% block content %}
-{% for entry in blog_entries %}
-    <h2>{{ entry.title }}</h2>
-    <p>{{ entry.body }}</p>
-{% endfor %}
+    <h2>Popular Today</h2>
+    {% include "recipes/_recipe_grid.html" with recipes=popular_foods %}
+    <div class="cuisine-grid">
+        {% for c in popular_cuisines %}
+            <a class="cuisine-card" href="{% url 'cuisine' c.id %}">
+                <p>{{c.cuisine}}</p>
+            </a>
+        {% endfor %}
+    </div>
 {% endblock %}

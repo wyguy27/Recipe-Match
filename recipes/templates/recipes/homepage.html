@@ -1,14 +1,22 @@
 {% extends "recipes/base.html" %}
+{% load static %}
 
 {% block title %}Recipe Match{% endblock %}
 
 {% block content %}
     <h2>Popular Today</h2>
-    {% include "recipes/_recipe_grid.html" with recipes=popular_foods %}
+    <div class="recipe-grid">
+        {% for r in popular_foods %}
+            <div class="recipe-card">
+                <img src="{% if r.image %}{{r.image}}{% else %}{% static 'recipes/food.png' %}{% endif %}" alt="{{r.name}}">
+                <p>{{r.name}}</p>
+            </div>
+        {% endfor %}
+    </div>
     <div class="cuisine-grid">
         {% for c in popular_cuisines %}
             <a class="cuisine-card" href="{% url 'cuisine' c.id %}">
-                <p>{{c.cuisine}}</p>
+                <p>{{c.name}}</p>
             </a>
         {% endfor %}
     </div>

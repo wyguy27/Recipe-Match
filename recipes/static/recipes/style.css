@@ -20,6 +20,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh; /* accounts for mobile browser toolbars */
   display: flex;
   flex-direction: column;
   background: #f8f9f5;
@@ -69,24 +70,37 @@ footer p {
   margin: 0;
 }
 
+/* 3 columns on desktop, 2 on tablets / small laptops, 1 on phones.
+   minmax(0, 1fr) lets columns shrink instead of overflowing the screen. */
 .recipe-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+}
+
+@media (max-width: 700px) {
+  .recipe-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .recipe-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .cuisine-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 2rem;
 }
 
-/* Stack cards in a single column on phones */
+/* Stack cuisines in a single column on phones */
 @media (max-width: 600px) {
-  .recipe-grid,
   .cuisine-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -98,13 +112,20 @@ footer p {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Every image sits in the same 3:2 box no matter its original size,
+   so cards line up on all screens. */
 .recipe-card img {
   display: block;
   width: 100%;
-  aspect-ratio: 20 / 10;
+  height: auto;
+  aspect-ratio: 3 / 2;
   object-fit: contain;
   border-radius: 4px;
-  margin: 0 auto;
+}
+
+.recipe-card p,
+.cuisine-card p {
+  overflow-wrap: anywhere; /* long names wrap instead of overflowing */
 }
 
 .recipe-card p {
@@ -126,10 +147,10 @@ a.cuisine-card:hover {
 .cuisine-card img {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
   object-fit: contain;
   border-radius: 4px;
-  margin: 0 auto;
 }
 
 .cuisine-card p {

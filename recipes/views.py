@@ -1,37 +1,38 @@
-from django.http import HttpResponse, Http404
-from django.shortcuts import render
-from django.templatetags.static import static
-import random
+from django.db.models import Count, Sum
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
 
-# Placeholder data until the backend can supply real recipes and cuisines
-IMAGES = ["food.png", "html_logo.png"]
-CUISINES = ["Cuisine1 long long long long long long long long long long", "Cuisine2", "Cuisine3", "Cuisine4"]
+from .models import Cuisine, Recipe
 
-def make_recipes(names):
-    return [
-        {"id" : i, "name" : name, "image" : static(f"recipes/{random.choice(IMAGES)}")}
-        for i, name in enumerate(names, start=1)
-    ]
+POPULAR_RECIPE_COUNT = 9
+POPULAR_CUISINE_COUNT = 4
+CUISINE_RECIPE_COUNT = 9
+
+def popular_recipes(queryset=None):
+    """Recipes ordered by visits, with id as a stable tie-breaker."""
+    if queryset is None:
+        queryset = Recipe.objects.all()
+    return queryset.order_by("-visited_count", "id")
+
 
 def index(request):
-    names = ["Test1 long long long long long long long long long long", "Test2", "Test3", "Test4", "Test5", "Test6", "Test7", "Test8", "Test9"]
-    popular_foods = make_recipes(names)
-    popular_cuisines = [
-        {"id" : i, "cuisine" : cuisine}
-        for i, cuisine in enumerate(CUISINES, start=1)
-    ]
+    popular_foods = popular_recipes()[ : POPULAR_RECIPE_COUNT]
+    popular_cuisines = (
+        Cuisine.objects
+        .annotate(total_visits=Sum("recipes__visited_count"), recipe_count=Count("recipes"))
+        .filter(recipe_count__gt=0)
+        .order_by("-total_visits", "-recipe_count", "name")[ : POPULAR_CUISINE_COUNT]
+    )
     return render(request, "recipes/homepage.html", {
         "popular_foods" : popular_foods,
         "popular_cuisines" : popular_cuisines,
     })
 
 def cuisine(request, cuisine_id):
-    if not 1 <= cuisine_id <= len(CUISINES):
-        raise Http404("Cuisine not found")
-    name = CUISINES[cuisine_id - 1]
-    recipes = make_recipes([f"{name} Recipe {n}" for n in range(1, 7)])
+    cuisine = get_object_or_404(Cuisine, pk=cuisine_id)
+    recipes = popular_recipes(cuisine.recipes.all())[ : CUISINE_RECIPE_COUNT]
     return render(request, "recipes/cuisine.html", {
-        "cuisine" : name,
+        "cuisine" : cuisine.name,
         "recipes" : recipes,
     })
 

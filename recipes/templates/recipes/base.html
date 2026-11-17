@@ -2,17 +2,20 @@
 <html lang="en">
 <head>
     {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
     <title>{% block title %}Recipe Finder{% endblock %}</title>
+</head>
+
+<body>
     <header class="site-header">
         {% block header %}
         <h1>Welcome to Recipe-Match!</h1>
         <p>Find something delicious to cook</p>
         {% endblock %}
     </header>
-</head>
 
-<body>
     <nav class="navbar">
         {% block navbar %}
         <ul class="nav-links">

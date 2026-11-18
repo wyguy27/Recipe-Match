@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Recipe(models.Model):
     spoonacular_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=256)

@@ -1,0 +1,97 @@
+{% extends "recipes/base.html" %}
+{% load static %}
+{% block title %}Search Recipes{% endblock %}
+
+{% block content %}
+
+    <div class="search_container">
+        <form method="GET" action="{% url 'results' %}">
+            <input type="text" id="search-input" name="search" placeholder="What would you like to search for?">
+
+            <details>
+                <summary>Advanced Search</summary>
+                    <div>
+                        <label for="cuisine">Cuisine:</label>
+                        <select name="cuisine" id="cuisine">
+                            <option value="">Select Cuisine</option>
+                            <option value="african">African</option>
+                            <option value="asian">Asian</option>
+                            <option value="american">American</option>
+                            <option value="british">British</option>
+                            <option value="cajun">Cajun</option>
+                            <option value="caribbean">Caribbean</option>
+                            <option value="chinese">Chinese</option>
+                            <option value="eastern-european">Eastern European</option>
+                            <option value="european">European</option>
+                            <option value="french">French</option>
+                            <option value="german">German</option>
+                            <option value="greek">Greek</option>
+                            <option value="indian">Indian</option>
+                            <option value="irish">Irish</option>
+                            <option value="italian">Italian</option>
+                            <option value="japanese">Japanese</option>
+                            <option value="jewish">Jewish</option>
+                            <option value="korean">Korean</option>
+                            <option value="latin-american">Latin American</option>
+                            <option value="mediterranean">Mediterranean</option>
+                            <option value="mexican">Mexican</option>
+                            <option value="middle-eastern">Middle Eastern</option>
+                            <option value="nordic">Nordic</option>
+                            <option value="southern">Southern</option>
+                            <option value="spanish">Spanish</option>
+                            <option value="thai">Thai</option>
+                            <option value="vietnamese">Vietnamese</option>
+                        </select>
+                    </div>
+
+                    <div class="diet" name="diet">
+                        <summary id="drs">Dietary Restrictions</summary>
+                        <input type="checkbox" id="gluten_free" name="gluten" value="HTML">
+                        </label for="gluten_free">Gluten Free</label><br>
+                        <input type="checkbox" id="keto" name="keto" value="HTML">
+                        </label for="keto">Ketogenic</label><br>
+                        <input type="checkbox" id="vegetarian" name="clavicular" value="HTML">
+                        </label for="vegetarian">Vegetarian</label><br>
+                        <input type="checkbox" id="vegan" name="vegan" value="HTML">
+                        </label for="vegan">Vegan</label><br>
+                        <input type="checkbox" id="pescetarian" name="aquaman" value="HTML">
+                        </label for="pescetarian">Pescetarian</label><br>
+                    </div>
+
+                    <input type="number" id="calorie-input" name="calorie" placeholder="How chuddy is your food?">
+            </details>
+            <input type="submit" id="enter_search" name="enter_search" value="Enter">
+        </form>
+    </div>
+
+    <style>
+        #header {
+            width: 100%;
+            font-family: Papyrus;
+        }
+
+        .search_container {
+            width: 80%;
+        }
+
+        #searchbar {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        details {
+            border: 1px solid #aaaaaa;;
+            border-radius: 4px;
+            margin-top: 5px;
+            margin-right: 10%;
+        }
+
+        .diet {
+            border: 1px solid #aaaaaa
+        }
+
+        #drs {
+            margin-left: 10px;
+        }
+    </style>
+{% endblock %}

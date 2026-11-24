@@ -5,6 +5,7 @@
 {% block content %}
     <h2>Popular Today</h2>
     {% include "recipes/_recipe_grid.html" with recipes=popular_foods %}
+    <h3>Popular Cuisines</h3>
     <div class="cuisine-grid">
         {% for c in popular_cuisines %}
             <a class="cuisine-card" href="{% url 'cuisine' c.id %}">

@@ -1,8 +1,13 @@
-from django.http import HttpResponse, Http404
-from django.shortcuts import render
-from django.templatetags.static import static
 import requests
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, get_object_or_404
+from django.templatetags.static import static
+from django.db.models import F
 from .models import Recipe, Cuisine, Ingredient, RecipeIngredient
+
+POPULAR_RECIPE_COUNT = 9
+POPULAR_CUISINE_COUNT = 6
+CUISINE_RECIPE_COUNT = 9
 
 
 def clean_recipe_images(recipes):
@@ -15,7 +20,7 @@ def clean_recipe_images(recipes):
 
 
 def index(request):
-    popular_recipes = Recipe.objects.order_by('-visited_count')[:6]
+    popular_recipes = Recipe.objects.order_by('-visited_count')[:POPULAR_RECIPE_COUNT]
     popular_recipes = clean_recipe_images(popular_recipes)
 
     popular_cuisines = Cuisine.objects.all()
@@ -27,21 +32,29 @@ def index(request):
 
 
 def cuisine(request, cuisine_id):
-    try:
-        cuisine = Cuisine.objects.get(id=cuisine_id)
-    except (Cuisine.DoesNotExist):
-        raise Http404("Cuisine does not exist")
+    cuisine = get_object_or_404(Cuisine, pk=cuisine_id)
 
-    recipes = Recipe.objects.filter(cuisine=cuisine).order_by("-visited_count")[:6]
+    recipes = Recipe.objects.filter(cuisines=cuisine_id).order_by("-visited_count")[:CUISINE_RECIPE_COUNT]
+    for recipe in recipes:
+        print(recipe)
     return render(request, "recipes/cuisine.html", {
-        "cuisine" : cuisine_id,
+        "cuisine" : cuisine.name,
         "recipes" : recipes,
     })
 
 
 def recipe(request, recipe_id):
-    response = "You are looking at %s."
-    return HttpResponse(response % recipe_id)
+    print("No")
+
+
+"""def recipe(request, recipe_id):
+    recipe_obj = get_object_or_404(Recipe, pk=recipe_id)
+    Recipe.objects.filter(pk=recipe_obj.pk).update(visited_count=F("visited_count") + 1)
+
+    return render(request, "recipes/recipe.html", {
+        "recipe": recipe_obj,
+        "recipe_ingredients": recipe_obj.ingredients.select_related("ingredient"),
+    })"""
 
 
 def search(request):
@@ -61,7 +74,7 @@ def search(request):
         diets.append('vegan')
     if request.GET.get('pescetarian'):
         diets.append('pescetarian')
-    diet = ','.join(diets)
+    diet = ', '.join(diets)
 
     if not query:
         return render(request, 'recipes/results.html', {

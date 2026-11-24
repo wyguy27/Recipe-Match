@@ -1,7 +1,7 @@
 {% extends "recipes/base.html" %}
 {% load static %}
 
-{% block title %} Homemade Pizza {% endblock %} {#change Homemade Pizza to {{recipe.name}} later#}
+{% block title %} {{recipe.name}} {% endblock %} 
 {% block extra_head %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,109 +10,68 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'recipes/recipes.css' %}">
 {% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'recipes/recipes.css' %}">
+{% endblock %}
 
 {% block content %}
     <div class = "recipe-page">
-        <h1 class = "recipe-title"> Homemade Pizza Recipe </h1> {#change Homemade Pizza Recipe to {{recipe.name}}#}
+        <h1 class = "recipe-title"> {{recipe.name}} </h1> 
         <div class = "recipe-tags">
-            <span class = "tag tag-cuisine"> <strong >Cuisine: </strong> Italian </span>
-            <span class = "tag tag-diet"> <strong> Dietary Info: </strong> Vegetarian </span>
+            {% if recipe.cuisines.all %}
+                <div class="tag-group">
+                    <strong class="tag-label tag-label-cuisine">Cuisine:</strong>
+                    {% for cuisine in recipe.cuisines.all %}
+                        <span class="tag tag-cuisine">{{ cuisine.name|title }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if recipe.diets.all %}
+                <div class="tag-group">
+                    <strong class="tag-label tag-label-diet">Dietary Info:</strong>
+                    {% for diet in recipe.diets.all %}
+                        <span class="tag tag-diet">{{ diet.name|title }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
         
-        <img class = "recipe-image" src="{% static 'recipes/images/pizza.jpg' %}" alt="Image of Recipe Placeholder">
-        {# <img class="recipe-image" src="{{ recipe.image }}" alt="{{ recipe.name }}"> #}
+        {% if recipe.image %}
+            <img class="recipe-image" src="{{ recipe.image }}" alt="{{ recipe.name }}"> 
+        {% endif %}
         <div class = "recipe-info"> 
-            <p><strong> Servings: </strong> 4 to 6 </p>
-            <p><strong> Prep Time: </strong> 30 mins </p>
-            <p><strong> Cook Time: </strong> 30 mins </p>
-            <p><strong> Total Time: </strong> 2 hrs 30 min </p>
+            {% if recipe.servings %} 
+                <p><strong> Servings: </strong> {{recipe.servings}} </p> 
+            {% endif %}
+
+            {% if recipe.read_time %}
+                <p><strong> Ready in: </strong> {{recipe.ready_time}} mins</p>
+            {% endif %}
         </div>
 
        <div class = "recipe-body">
             <section class = "recipe-items">
                 <h2> Ingredients</h2> 
-                <h3> Pizza Dough</h3>
                 <ul class = "ingredients-list"> 
-                    <li> 1 1/2 cups warm water (105 to 115 °F) </li>
-                    <li> 1 package (2 1/4 teaspoons) active dry yeast </li>
-                    <li> 3 3/4 cups (490g) bread flour </li>
-                    <li> 2 tablespoons extra virgin olive oil </li>
-                    <li> 2 teaspoons kosher salt</li>
-                    <li> 1 teaspoon sugar</li>
-                </ul>
-                <h3> Pizza and toppings </h3>
-                <ul class = "ingredients-list"> 
-                    <li> Extra olive oil </li>
-                    <li> Cornmeal </li>
-                    <li> Tomato sauce </li>
-                    <li> Firm mozzarella cheese, separated into small clumps</li>
-                    <li> Fontina cheese, grated </li>
-                    <li> Parmesan cheese, grated </li>
-                    <li> Feta cheese, crumbled </li>
-                    <li> Mushrooms, very thinly sliced if raw, otherwise first sauteed </li>
-                    <li> Bell peppers, stems and seeds removed, very thinly sliced </li>
-                    <li> Italian pepperoncini, thinly sliced </li>
-                    <li> Italian sausage, cooked ahead and crumbled </li>
-                    <li> Sliced black olives </li>
-                    <li> Chopped fresh basil </li>
-                    <li> Baby arugula, tossed in a little olive oil, added as pizza comes out of the oven</li>
-                    <li> Pesto </li>
-                    <li> Pepperoni, thinly sliced</li>
-                    <li> Onions, thinly sliced raw or caramelized </li>
-                    <li> Ham, thinly sliced </li>
+                    {% for ri in recipe_ingredients %}
+                        <li> {{ri.ingredient.name}}</li>
+                    {% empty %}
+                        <li> no ingredients listed. </li>
+                    {% endfor %}
                 </ul>
             </section>
 
             <section class = "recipe-instructions">
                 <h2> Instructions </h2>
-                <h3> Make the dough</h3>
-                <ol>
-                    <li> Pour warm water into a stand mixer bowl, sprinkle the yeast on top, and let it sit 5 minutes until foamy. (If you have instant yeast, skip this and add it straight to the flour.)</li>
-                    <li> Add flour, salt, sugar, and olive oil. Mix on low with the paddle for 1 minute. </li>
-                    <li> Switch to the dough hook and knead on low-medium for 7-10 minutes. (Or knead by hand.)</li>
-                    <li> The dough should be slightly tacky. If it’s too wet, add a little flour.</li>
-                </ol>
-                <h3> Let it rise </h3>
-                <ol>
-                    <li> Coat a large bowl with olive oil, add the dough, and turn it to coat. Cover with plastic wrap.</li>
-                    <li> Choose your rise time: 
-                        <ul>
-                            <li> Quick: 1½ hours in a warm spot (75-85°F)</li>
-                            <li> Medium: 8 hours on the counter </li>
-                            <li>  Slow: 24 hours in the fridge (48 hours max), for the best flavor</li>
-                        </ul>   
-                    </li>
-                </ol>
-                <h3> Prep and shape </h3>
-                    <ol>
-                        <li> Put a pizza stone (or sturdy baking sheet or pizza pan) on a lower oven rack. Preheat to 475°F for 30-60 minutes. </li>
-                        <li> Punch the dough down gently and divide it in half. Shape into 2 balls, cover, and rest 15 minutes (up to 2 hours). </li>
-                        <li> Prep toppings, going light so the crust stays crisp. About ⅓ cup each of sauce and cheese per pizza is plenty </li>
-                        <li> On a floured surface, press one ball out from the center to ½ inch thick, then stretch it. </li>
-                        <li> Let it rest 5 minutes, then stretch to 10-12 inches. Be gentle, and pinch any holes closed. </li>
-                        <li> Press dents into the dough with your fingertips and brush the top with olive oil. Rest 10-15 minutes. </li>
-                        <li> Repeat with the second ball. </li> 
-    
-                    </ol>
-                
-                <h3> Assemble and bake </h3>
-                    <ol>
-                        <li> Sprinkle a pizza peel (or flat baking sheet) with cornmeal and move the dough onto it. </li>
-                        <li> Add sauce, cheese, and toppings. </li>
-                        <li> Sprinkle a little cornmeal on the hot stone. Shake the peel to check the pizza slides, adding more cornmeal if it sticks. </li>
-                        <li> Slide the pizza onto the stone. </li>
-                        <li> Bake 10-15 minutes, one pizza at a time, until the crust is browned and the cheese is golden. </li>
-                    </ol>
-                        
+                {{recipe.instructions|safe}}
+
             </section> 
         </div>
-        <section class = "recipe-notes">
-            <h2> Notes </h2>  
-            <ul class = "notes-list">
-                <li> Leftover dough keeps in the fridge for up to 3 days. Wrap it tightly in oiled plastic wrap.</li>
-                <li> Go light on toppings. Too many will make the center soggy. </li>
-            </ul>
-        </section>
+        {% if recipe.source_url %}
+            <p class="recipe-source">
+                <a href="{{ recipe.source_url }}" target="_blank" rel="noopener">View original recipe</a>
+            </p>
+        {% endif %}
 
     </div>
 

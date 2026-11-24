@@ -19,16 +19,36 @@
 
 .recipe-tags {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
   justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
 }
+
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+.tag-label-diet {
+  color: #1E6B34;
+}
+
+.tag-label-cuisine {
+  color: #9A4A00;
+}
+
+
 
 .tag {
   border: none;
   border-radius: 9999px;
   padding: 10px 20px;
   text-align: center;
+  white-space: nowrap;
   display: inline-block;
   cursor: pointer;
 }

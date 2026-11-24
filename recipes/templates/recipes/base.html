@@ -3,17 +3,17 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'recipes/style.css' %}">
+    {% block extra_css %}{% endblock %}
     <title>{% block title %}Recipe Finder{% endblock %}</title>
-    {% block extra_head %}{% endblock %}
-</head>
-
-<body>
     <header class="site-header">
         {% block header %}
         <h1>Welcome to Recipe-Match!</h1>
         <p>Find something delicious to cook</p>
         {% endblock %}
     </header>
+</head>
+
+<body>
     <nav class="navbar">
         {% block navbar %}
         <ul class="nav-links">

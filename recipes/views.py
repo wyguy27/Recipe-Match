@@ -23,7 +23,9 @@ def index(request):
     popular_recipes = Recipe.objects.order_by('-visited_count')[:POPULAR_RECIPE_COUNT]
     popular_recipes = clean_recipe_images(popular_recipes)
 
-    popular_cuisines = Cuisine.objects.all()
+    popular_cuisines = [{"id": i + 1, "cuisine": cuisine.name}
+        for i, cuisine in enumerate(Cuisine.objects.all())
+    ]
 
     return render(request, "recipes/homepage.html", {
         "popular_foods" : popular_recipes,

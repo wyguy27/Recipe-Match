@@ -1,45 +1,48 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from django.templatetags.static import static
-from dataclasses import dataclass
-from models import Recipe, Ingredient, RecipeIngredient, Cuisine, Diet, Equipment, RecipeType, Intolerance
-import random, requests
+import requests
+from .models import Recipe, Cuisine, Ingredient, RecipeIngredient
 
-# Placeholder data until the backend can supply real recipes and cuisines
-IMAGES = ["food.png", "html_logo.png"]
-CUISINES = ["Cuisine1 long long long long long long long long long long", "Cuisine2", "Cuisine3", "Cuisine4"]
 
-def make_recipes(names):
-    return [
-        {"id" : i, "name" : name, "image" : static(f"recipes/{random.choice(IMAGES)}")}
-        for i, name in enumerate(names, start=1)
-    ]
+def clean_recipe_images(recipes):
+    cleaned_recipes = recipes
+    for recipe in cleaned_recipes:
+        if not recipe.image:
+            recipe.image = "" # static(r"recipes/food.png")
+
+    return cleaned_recipes
+
 
 def index(request):
-    names = ["Test1 long long long long long long long long long long", "Test2", "Test3", "Test4", "Test5", "Test6", "Test7", "Test8", "Test9"]
-    popular_foods = make_recipes(names)
-    popular_cuisines = [
-        {"id" : i, "cuisine" : cuisine}
-        for i, cuisine in enumerate(CUISINES, start=1)
-    ]
+    popular_recipes = Recipe.objects.order_by('-visited_count')[:6]
+    popular_recipes = clean_recipe_images(popular_recipes)
+
+    popular_cuisines = Cuisine.objects.all()
+
     return render(request, "recipes/homepage.html", {
-        "popular_foods" : popular_foods,
+        "popular_foods" : popular_recipes,
         "popular_cuisines" : popular_cuisines,
     })
 
+
 def cuisine(request, cuisine_id):
-    if not 1 <= cuisine_id <= len(CUISINES):
-        raise Http404("Cuisine not found")
-    name = CUISINES[cuisine_id - 1]
-    recipes = make_recipes([f"{name} Recipe {n}" for n in range(1, 7)])
+    try:
+        cuisine = Cuisine.objects.get(id=cuisine_id)
+    except (Cuisine.DoesNotExist):
+        raise Http404("Cuisine does not exist")
+
+    recipes = Recipe.objects.filter(cuisine=cuisine).order_by("-visited_count")[:6]
     return render(request, "recipes/cuisine.html", {
-        "cuisine" : name,
+        "cuisine" : cuisine_id,
         "recipes" : recipes,
     })
+
 
 def recipe(request, recipe_id):
     response = "You are looking at %s."
     return HttpResponse(response % recipe_id)
+
 
 def search(request):
     query = request.GET.get('search', '').strip()
@@ -105,6 +108,7 @@ def search(request):
             'maxCalories': calorie,
             'error': 'Error. Please try again.'
         })
+
 
 def about(request):
     return HttpResponse("You are at the about page.")

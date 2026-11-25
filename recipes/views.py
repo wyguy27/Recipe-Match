@@ -1,10 +1,13 @@
-import requests
+import requests, os
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.templatetags.static import static
 from django.db.models import F
+from dotenv import load_dotenv
 from .models import Recipe, Cuisine, Ingredient, RecipeIngredient
 
+load_dotenv()
+SPOONACULAR_API_KEY = os.getenv("API_KEY")
 POPULAR_RECIPE_COUNT = 9
 POPULAR_CUISINE_COUNT = 6
 CUISINE_RECIPE_COUNT = 9
@@ -46,20 +49,21 @@ def cuisine(request, cuisine_id):
 
 
 def recipe(request, recipe_id):
-    print("No")
-
-
-"""def recipe(request, recipe_id):
     recipe_obj = get_object_or_404(Recipe, pk=recipe_id)
     Recipe.objects.filter(pk=recipe_obj.pk).update(visited_count=F("visited_count") + 1)
+    ingredients = Ingredient.objects.filter(recipe_ingredients__recipe=recipe)
 
     return render(request, "recipes/recipe.html", {
         "recipe": recipe_obj,
-        "recipe_ingredients": recipe_obj.ingredients.select_related("ingredient"),
-    })"""
+        "recipe_ingredients": ingredients,
+    })
 
 
 def search(request):
+    return render(request, 'recipes/search.html')
+
+
+def results(request):
     query = request.GET.get('search', '').strip()
     cuisine = request.GET.get('cuisine', '').strip()
     calorie = request.GET.get('calorie', '').strip()
@@ -76,7 +80,7 @@ def search(request):
         diets.append('vegan')
     if request.GET.get('pescetarian'):
         diets.append('pescetarian')
-    diet = ', '.join(diets)
+    diet = ','.join(diets)
 
     if not query:
         return render(request, 'recipes/results.html', {
@@ -90,12 +94,14 @@ def search(request):
     url = "https://api.spoonacular.com/recipes/complexSearch"
 
     params = {
+        'apiKey': SPOONACULAR_API_KEY,
         'query': query,
         'cuisine': cuisine,
         'diet': diet,
         'maxCalories': calorie if calorie else 1000000,
         'number': 10
     }
+    # print(params)
 
     try:
         response = requests.get(url, params=params, timeout=10)
@@ -126,4 +132,4 @@ def search(request):
 
 
 def about(request):
-    return HttpResponse("You are at the about page.")
+    return HttpResponse("You are at the about us page.")
